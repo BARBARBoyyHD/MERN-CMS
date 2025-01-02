@@ -17,6 +17,13 @@ exports.create = async (req, res) => {
     const created_at = moment().format("LL");
 
     // Convert arrays (from checkboxes) to comma-separated strings
+    const objekTerkaitString = Array.isArray(objekTerkait)
+      ? objekTerkait.join(", ")
+      : "";
+    const unsurPemajuanString = Array.isArray(unsurPemajuan)
+      ? unsurPemajuan.join(", ")
+      : "";
+
     const objekTerkaitArray = objekTerkaitString
       .split(", ")
       .map((item) => item.trim());
@@ -34,8 +41,8 @@ exports.create = async (req, res) => {
           noRegistrasi,
           noSKinstansi,
           usiaKarya,
-          objekTerkait: objekTerkaitString, // Save as a single string
-          unsurPemajuan: unsurPemajuanString, // Save as a single string
+          objekTerkait: objekTerkaitArray, // Save as a single string
+          unsurPemajuan: unsurPemajuanArray, // Save as a single string
           lokasi,
           created_at,
         },
