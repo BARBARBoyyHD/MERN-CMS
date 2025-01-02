@@ -1,13 +1,15 @@
+const moment = require("moment"); // Ensure you have moment.js installed
+
 exports.create = async (req, res) => {
     try {
         const { namaKarya, status, noRegistrasi, noSKinstansi, usiaKarya, objekTerkait, unsurPemajuan, lokasi } = req.body;
-        console.log('Request body:', req.body);  // Add this log to see the data
-
+        console.log('Request body:', req.body);  // Log request body to debug
+        
         const created_at = moment().format("LL");
 
-        // Ensure objekTerkait and unsurPemajuan are arrays
-        const objekTerkaitArray = Array.isArray(objekTerkait) ? objekTerkait : [objekTerkait];
-        const unsurPemajuanArray = Array.isArray(unsurPemajuan) ? unsurPemajuan : [unsurPemajuan];
+        // Convert arrays (from checkboxes) to comma-separated strings
+        const objekTerkaitString = Array.isArray(objekTerkait) ? objekTerkait.join(", ") : "";
+        const unsurPemajuanString = Array.isArray(unsurPemajuan) ? unsurPemajuan.join(", ") : "";
 
         // Insert data into the "content" table
         const { data: contentData, error: contentError } = await supabase
@@ -19,8 +21,8 @@ exports.create = async (req, res) => {
                     noRegistrasi,
                     noSKinstansi,
                     usiaKarya,
-                    objekTerkait: objekTerkaitArray,
-                    unsurPemajuan: unsurPemajuanArray,
+                    objekTerkait: objekTerkaitString, // Save as a single string
+                    unsurPemajuan: unsurPemajuanString, // Save as a single string
                     lokasi,
                     created_at
                 }
@@ -28,13 +30,13 @@ exports.create = async (req, res) => {
             .select();
 
         if (contentError) {
-            console.error('Insert error:', contentError); // Log the error
+            console.error('Insert error:', contentError); // Log error
             return res.status(500).json({ message: contentError.message });
         }
-        return res.status(200).json({ message: "Content created successfully", data: contentData });
 
+        return res.status(200).json({ message: "Content created successfully", data: contentData });
     } catch (error) {
-        console.error('Server error:', error);  // Log any unexpected error
+        console.error('Server error:', error); // Log unexpected errors
         return res.status(500).json({ message: error.message });
     }
 };
