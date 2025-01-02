@@ -1,5 +1,5 @@
 const moment = require("moment"); // Ensure you have moment.js installed
-
+const supabase = require("../../config/db")
 exports.create = async (req, res) => {
     try {
         const { namaKarya, status, noRegistrasi, noSKinstansi, usiaKarya, objekTerkait, unsurPemajuan, lokasi } = req.body;
